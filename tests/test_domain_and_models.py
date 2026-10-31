@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import unittest
+import tempfile
 from pathlib import Path
 from core.domain.entities_and_ports import (
     ProcessState,
@@ -41,12 +42,22 @@ class TestDomainEntities(unittest.TestCase):
         self.assertEqual(len(OFFICIAL_PROJECT_ROUTES["frontend_routes"]), 3)
         self.assertEqual(len(OFFICIAL_PROJECT_ROUTES["backend_routes"]), 4)
         detector = PolyglotStackDetectorAdapter()
-        project_root = str(Path(__file__).resolve().parents[3])
-        blueprint = detector.detect_project_blueprint(project_root)
-        self.assertIn(blueprint.os_profile.os_family, ("WINDOWS", "LINUX_DEBIAN_UBUNTU", "LINUX_OTHER", "MACOS"))
-        service_ids = [s.service_id for s in blueprint.detected_services]
-        self.assertIn("backend", service_ids)
-        self.assertIn("frontend", service_ids)
+        
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            backend_dir = tmp_path / "backend"
+            backend_dir.mkdir()
+            (backend_dir / "main.py").write_text("# main\n", encoding="utf-8")
+            (backend_dir / "requirements.txt").write_text("fastapi\nuvicorn\n", encoding="utf-8")
+            frontend_dir = tmp_path / "frontend"
+            frontend_dir.mkdir()
+            (frontend_dir / "package.json").write_text('{"name": "test-front"}', encoding="utf-8")
+            
+            blueprint = detector.detect_project_blueprint(str(tmp_path))
+            self.assertIn(blueprint.os_profile.os_family, ("WINDOWS", "LINUX_DEBIAN_UBUNTU", "LINUX_OTHER", "MACOS"))
+            service_ids = [s.service_id for s in blueprint.detected_services]
+            self.assertIn("backend", service_ids)
+            self.assertIn("frontend", service_ids)
 
 
 if __name__ == "__main__":

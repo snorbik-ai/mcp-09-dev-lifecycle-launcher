@@ -265,7 +265,7 @@ class AuditHealthUseCase:
         open_ports = self.supervisor.get_open_ports([8000, 3000])
         is_healthy = b_check.is_healthy and f_check.is_healthy
 
-        return {
+        res = {
             "overall_status": "HEALTHY" if is_healthy else "DEGRADED",
             "open_ports": open_ports,
             "services": {
@@ -282,6 +282,14 @@ class AuditHealthUseCase:
             "routes_catalog": OFFICIAL_PROJECT_ROUTES,
             "route_shortcuts": ROUTE_SHORTCUTS,
         }
+        if not open_ports or not is_healthy:
+            res["suggested_next_action"] = {
+                "instruction": "Les serveurs de développement locaux sont inactifs ou dégradés. Pour les démarrer, utilisez les commandes ci-dessous :",
+                "command_backend": "uvicorn entrypoints.api.main:app --reload --port 8000",
+                "command_frontend": "npm run dev",
+                "one_click_mcp": "dev_start_services(open_browser=False, auto_clean=True)",
+            }
+        return res
 
 
 class GetErrorDiagnosticUseCase:

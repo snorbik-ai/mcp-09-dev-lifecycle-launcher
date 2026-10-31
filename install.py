@@ -106,6 +106,10 @@ def main():
     
     print("=" * 70)
     print(f"✅ Serveur MCP {COMPONENT_NAME} installé et configuré dans Cursor avec succès !")
+    print("💡 RAPPEL DX IMPORTANT :")
+    print("   Rechargez votre fenêtre Cursor pour activer les nouveaux MCPs :")
+    print("   👉 Appuyez sur Ctrl+Shift+P (ou Cmd+Shift+P) puis sélectionnez :")
+    print("      > Developer: Reload Window")
     print("=" * 70)
 
 if __name__ == "__main__":
