@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-09-dev-lifecycle-launcher"
+version = "1.0.0"
+description = "Superviseur de cycle de vie de développement local qui gère les processus orphelins, surveille les ports (FastAPI 8000 et Vite 3000) et synchronise l'environnement sous Windows et Ubuntu Linux."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary / SNORBIK AI" }
+authors = [
+    { name = "Snorbik AI Engineering", email = "engineering@snorbik.ai" }
+]
+dependencies = [
+    "psutil>=5.9.0",
+    "pydantic>=2.7.0",
+    "mcp>=1.0.0"
+]
+
+[tool.setuptools]
+packages = { find = { where = ["."], exclude = ["tests*", "docs*"] } }
