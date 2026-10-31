@@ -4,6 +4,8 @@ Script d'Installation 1-Clic Autonome & Injection Cursor MCP — mcp-09-dev-life
 Snorbik AI Architecture V14.1
 """
 import sys
+from snorbik_bootstrap import get_guaranteed_python
+PYTHON_BIN = get_guaranteed_python()
 import os
 import json
 import subprocess
@@ -33,13 +35,13 @@ def install_dependencies(root_dir: Path):
     else:
         # Python
         if (root_dir / "pyproject.toml").exists() or (root_dir / "setup.py").exists():
-            res = subprocess.run([sys.executable, "-m", "pip", "install", "-e", "."], cwd=str(root_dir), shell=True)
+            res = subprocess.run([str(PYTHON_BIN), "-m", "pip", "install", "-e", "."], cwd=str(root_dir), shell=True)
             if res.returncode == 0:
                 print("[+] Package installé en mode éditable (pip install -e .).")
             else:
                 print("[-] Attention : échec lors de pip install -e .")
         elif (root_dir / "requirements.txt").exists():
-            subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], cwd=str(root_dir), shell=True)
+            subprocess.run([str(PYTHON_BIN), "-m", "pip", "install", "-r", "requirements.txt"], cwd=str(root_dir), shell=True)
             print("[+] Dépendances requirements.txt installées.")
 
 def configure_cursor_mcp(root_dir: Path):
@@ -74,7 +76,7 @@ def configure_cursor_mcp(root_dir: Path):
         }
     else:
         server_entry = {
-            "command": sys.executable if sys.executable else "python",
+            "command": str(PYTHON_BIN) if str(PYTHON_BIN) else "python",
             "args": [str(entrypoint_full.as_posix())],
             "env": {
                 "PYTHONIOENCODING": "utf-8"
