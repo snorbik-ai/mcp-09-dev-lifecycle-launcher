@@ -203,6 +203,10 @@ def run_stdio_server():
             req_id = req.get("id")
             method = req.get("method")
 
+            # Notification sans id : absorption silencieuse
+            if req_id is None:
+                continue
+
             if method == "initialize":
                 resp = {
                     "jsonrpc": "2.0",
@@ -219,6 +223,9 @@ def run_stdio_server():
                         }
                     }
                 }
+
+            elif method == "ping":
+                resp = {"jsonrpc": "2.0", "id": req_id, "result": {}}
 
             elif method == "tools/list":
                 resp = {"jsonrpc": "2.0", "id": req_id, "result": {"tools": TOOLS_METADATA}}

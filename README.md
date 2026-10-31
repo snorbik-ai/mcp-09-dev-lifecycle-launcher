@@ -90,3 +90,16 @@ Voici 3 exemples réels de requêtes que vous pouvez poser directement dans le c
 - **Éditeur :** SNORBIK AI © 2026.
 - **Classification :** Conforme à la Directive Maîtresse V14.1 (Recettes d'architecture sanctuarisées dans le Pôle 06).
 - **Zéro Régression :** Respect strict des budgets de lignes et des normes de sécurité.
+
+
+## 🤖 Prompt d'Installation Agent-Native (Copier-Coller pour votre Agent IA)
+
+```markdown
+Je souhaite installer et activer le serveur MCP `mcp-09-dev-lifecycle-launcher` dans mon environnement de travail.
+
+1. Détecte mon client de code (Cursor, VS Code, Claude Code, ou Claude Desktop).
+2. Lance l'installateur multi-clients :
+   python install.py --client all
+3. Vérifie que le serveur est bien enregistré et exécute un test de connexion stdio :
+   python -m pytest tests/test_mcp_integration.py
+```
