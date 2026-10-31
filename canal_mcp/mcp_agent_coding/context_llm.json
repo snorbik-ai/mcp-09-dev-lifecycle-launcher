@@ -1,0 +1,55 @@
+{
+  "system_identity": {
+    "tool_id": "09_dev_lifecycle_launcher",
+    "module_name": "09_dev_lifecycle_launcher",
+    "product_name": "Superviseur & Lanceur de Cycle de Vie Dev Multi-OS BatiHome",
+    "industrial_designation": "Superviseur & Lanceur de Cycle de Vie Dev Multi-OS (Windows & Ubuntu 26)",
+    "version": "1.0.0",
+    "architecture": "Clean Architecture Tri-Canal (Domain Entities/Ports -> Application Use Cases via DI -> Infrastructure Multi-OS)",
+    "mission": "Orchestre le cycle de vie complet de l'environnement de développement BatiHome (FastAPI Port 8000 + Frontend Vite Port 3000) sous Windows (start.bat / stop.bat) et Ubuntu Linux 24/26 (start.sh / stop.sh). Capture en temps réel les erreurs d'exécution pour les synthétiser en fiches de diagnostic exploitables immédiatement par un modèle IA.",
+    "standards": "Clean Architecture DIP, Multi-OS Windows/Linux, Pattern Digest-First, Zéro Dépendance Externe Lourde (Urllib pur), Healthcheck 2/2, Tolérance aux ports orphelins",
+    "titre_accessible": "Lanceur & Superviseur Dev Multi-OS avec Diagnostic d'Erreur IA",
+    "description_accessible": "Démarre, surveille et éteint les serveurs BatiHome en 1 clic sous Windows et Linux. Capture les erreurs et fournit un diagnostic structuré pour remédiation IA."
+  },
+  "tool_id": "09_dev_lifecycle_launcher",
+  "tool_name": "Superviseur & Lanceur de Cycle de Vie Dev Multi-OS",
+  "version": "1.0.0",
+  "gps_tools_registry": [
+    {
+      "name": "start_services",
+      "use_case": "StartDevServicesUseCase",
+      "cli_command": "python outils_internes/09_dev_lifecycle_launcher/canal_sdk_cli/cli.py start",
+      "signature": "open_browser: bool = True, auto_clean: bool = True, timeout: float = 15.0",
+      "purpose": "Libère les ports orphelins 3000/8000, démarre FastAPI et Vite en mode dev, vérifie les sondes HTTP et ouvre le navigateur.",
+      "best_practices": "Action recommandée pour démarrer l'ensemble du projet sans lancer de commandes de terminal séparées."
+    },
+    {
+      "name": "stop_services",
+      "use_case": "StopDevServicesUseCase",
+      "cli_command": "python outils_internes/09_dev_lifecycle_launcher/canal_sdk_cli/cli.py stop",
+      "signature": "ports: List[int] = [8000, 3000]",
+      "purpose": "Arrête proprement les processus FastAPI et Vite enregistrés et s'assure que les ports 3000 et 8000 sont libérés.",
+      "best_practices": "Utiliser pour éteindre le projet sans laisser de processus fantômes en arrière-plan."
+    },
+    {
+      "name": "audit_health",
+      "use_case": "AuditHealthUseCase",
+      "cli_command": "python outils_internes/09_dev_lifecycle_launcher/canal_sdk_cli/cli.py status",
+      "signature": "none",
+      "purpose": "Vérifie instantanément si les ports 8000 et 3000 répondent et mesure les latences HTTP des sondes.",
+      "best_practices": "À appeler en début de session pour vérifier si l'environnement est en ligne."
+    },
+    {
+      "name": "get_error_diagnostic",
+      "use_case": "GetErrorDiagnosticUseCase",
+      "cli_command": "python outils_internes/09_dev_lifecycle_launcher/canal_sdk_cli/cli.py diagnose",
+      "signature": "none",
+      "purpose": "Retourne la dernière fiche d'erreur structurée (cause racine, remède suggéré et traceback nettoyée) pour correction par l'IA.",
+      "best_practices": "À interroger automatiquement dès qu'une défaillance ou un healthcheck KO est détecté."
+    }
+  ],
+  "agent_turn_lifecycle_rules": {
+    "rule_do": "Fournir un résumé exécutif concis du statut des services (HEALTHY/DEGRADED), des ports ouverts et de la cause racine en cas d'erreur.",
+    "rule_dont": "Ne jamais déverser de logs stdout/stderr bruts infinis dans la conversation. Utiliser le digest synthétique."
+  }
+}
